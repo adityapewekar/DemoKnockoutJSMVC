@@ -1,0 +1,48 @@
+﻿
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/knockout-3.4.2.js"></script>
+<h2>Partial View</h2>
+
+<div id="demo">
+    <input data-bind="value:Name" />
+    <select data-bind="options: Genders, optionsText:'GenderValue',optionsValue:'id',value:id, optionsCaption: 'Select Gender...'"></select>
+    <button type="button" data-bind="click:SaveUser">Save</button>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var NviewModel = new viewModel();
+        ko.applyBindings(NviewModel);
+    });
+
+    function viewModel()
+    {
+        var self = this;
+        self.Genders = ko.observableArray([]);
+        self.id = ko.observable();
+        self.Name = ko.observable();
+        $.getJSON("/Registration/PopulateGenderList", function (data) {
+            self.Genders(data);
+        });
+
+        self.SaveUser=function(){
+            $.ajax({
+                url: '/Registration/AddNewUser',
+                type: 'post',
+                dataType: 'json',
+                data: ko.toJSON(this),
+                contentType: 'application/json',
+                success: function (result) {
+                    debugger;
+                },
+                error: function (err) {
+                    debugger;
+                },
+                complete: function () {
+                   debugger
+                }
+            });
+        };
+    }
+</script>
